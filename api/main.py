@@ -78,7 +78,6 @@ def delete_document(request: DeleteFileRequest):
 
 @app.post("/sync-notion")
 def sync_notion(background_tasks: BackgroundTasks):
-    """Запускает синхронизацию с Notion в фоновом режиме"""
     task_id = str(uuid.uuid4())
     indexing_tasks[task_id] = "running"
     
@@ -95,6 +94,5 @@ def sync_notion(background_tasks: BackgroundTasks):
 
 @app.get("/sync-status/{task_id}")
 def get_sync_status(task_id: str):
-    """Возвращает статус задачи синхронизации"""
     status = indexing_tasks.get(task_id, "unknown task")
     return {"task_id": task_id, "status": status}
