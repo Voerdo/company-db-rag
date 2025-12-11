@@ -2,14 +2,19 @@ import streamlit as st
 from api_utils import get_api_response
 
 def display_chat_interface():
-    # Chat interface
     for message in st.session_state.messages:
-        with st.chat_message(message["role"]):
+        avatar = message.get("avatar")
+        with st.chat_message(message["role"], avatar=avatar):
             st.markdown(message["content"])
 
     if prompt := st.chat_input("Ваш вопрос"):
-        st.session_state.messages.append({"role": "user", "content": prompt})
-        with st.chat_message("user"):
+        st.session_state.messages.append({
+            "role": "user", 
+            "content": prompt, 
+            "avatar": "👤"
+        })
+        
+        with st.chat_message("user", avatar="👤"):
             st.markdown(prompt)
 
         with st.spinner("Поиск ответа..."):
@@ -17,9 +22,13 @@ def display_chat_interface():
             
             if response:
                 st.session_state.session_id = response.get('session_id')
-                st.session_state.messages.append({"role": "assistant", "content": response['answer']})
+                st.session_state.messages.append({
+                    "role": "assistant", 
+                    "content": response['answer'], 
+                    "avatar": "💬"
+                })
                 
-                with st.chat_message("assistant"):
+                with st.chat_message("assistant", avatar="💬"):
                     st.markdown(response['answer'])
                     
                     with st.expander("Details"):
